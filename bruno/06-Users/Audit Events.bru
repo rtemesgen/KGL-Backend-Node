@@ -1,0 +1,14 @@
+meta {
+  name: Audit Events
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/users/audit-events?page=1&limit=20
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Create Supplier
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/procurement/suppliers
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Supplier One",
+    "phone": "0780000001",
+    "email": "supplier@example.com",
+    "openingBalance": 0
+  }
+}

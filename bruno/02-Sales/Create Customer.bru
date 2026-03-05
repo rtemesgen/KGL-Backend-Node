@@ -1,0 +1,23 @@
+meta {
+  name: Create Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/sales/customers
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Customer One",
+    "tel": "0700000001",
+    "nin": "CF1234567890AB"
+  }
+}

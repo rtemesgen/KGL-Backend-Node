@@ -1,0 +1,31 @@
+meta {
+  name: Create Credit Sale
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/sales/credit-sales
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "customerId": "{{customerId}}",
+    "lines": [
+      {
+        "itemId": "{{itemId}}",
+        "quantity": 2,
+        "unitPrice": 5000
+      }
+    ],
+    "amountPaid": 2000,
+    "discount": 0,
+    "note": "Credit sale sample"
+  }
+}

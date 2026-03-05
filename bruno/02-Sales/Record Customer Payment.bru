@@ -1,0 +1,23 @@
+meta {
+  name: Record Customer Payment
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/sales/customers/{{customerId}}/payments
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "amount": 1000,
+    "paymentMethod": "cash",
+    "reference": "PAY-001"
+  }
+}

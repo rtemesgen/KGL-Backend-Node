@@ -1,0 +1,31 @@
+meta {
+  name: Create Credit Purchase
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/procurement/purchases
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "supplierId": "{{supplierId}}",
+    "paymentType": "credit",
+    "amountPaid": 2000,
+    "lines": [
+      {
+        "itemId": "{{itemId}}",
+        "quantity": 10,
+        "unitCost": 4000
+      }
+    ],
+    "note": "Credit purchase sample"
+  }
+}

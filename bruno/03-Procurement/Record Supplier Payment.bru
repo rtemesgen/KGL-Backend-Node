@@ -1,0 +1,23 @@
+meta {
+  name: Record Supplier Payment
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/procurement/suppliers/{{supplierId}}/payment-actions
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "amount": 1000,
+    "paymentMethod": "cash",
+    "reference": "SUP-PAY-001"
+  }
+}
