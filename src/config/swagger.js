@@ -18,7 +18,7 @@ const options = {
     ],
     tags: [
       { name: 'Health', description: 'Liveness and readiness endpoints' },
-      { name: 'Auth', description: 'Authentication and current user session' },
+      { name: 'Auth', description: 'Authentication, public registration, and current user session' },
       { name: 'Accounting', description: 'Expenses, credit collections, and other income' },
       { name: 'Procurement', description: 'Stock, suppliers, purchases, and procurement reports' },
       { name: 'Sales', description: 'Sales operations, customers, and payments' },
@@ -162,7 +162,7 @@ const options = {
             name: { type: 'string', example: 'Alice N.' },
             email: { type: 'string', format: 'email', example: 'alice@karibu.app' },
             password: { type: 'string', minLength: 6, example: 'StrongPass123' },
-            role: { type: 'string', enum: ['director', 'admin', 'sales-agent', 'manager'], example: 'sales-agent' },
+            role: { type: 'string', enum: ['director', 'admin', 'sales-agent', 'manager'], example: 'sales-agent', description: 'Optional role accepted by the current public registration flow' },
             branch: { type: 'string', enum: ['maganjo', 'matugga'], example: 'maganjo' }
           }
         },
@@ -2248,7 +2248,17 @@ const options = {
         get: {
           tags: ['Users'],
           summary: 'List users',
+          description: 'Admin and director callers can pass a branch query parameter to scope the result set. Other roles remain limited to their token branch.',
           security: secured,
+          parameters: [
+            {
+              in: 'query',
+              name: 'branch',
+              required: false,
+              schema: { type: 'string', enum: ['Maganjo', 'Matugga'] },
+              description: 'Optional branch scope for admin/director callers'
+            }
+          ],
           responses: {
             200: {
               description: 'User list',
@@ -2354,8 +2364,18 @@ const options = {
         patch: {
           tags: ['Users'],
           summary: 'Update user role',
+          description: 'Admin and director callers can target another branch by passing the same branch query parameter used for user listing.',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [
+            { $ref: '#/components/parameters/idPath' },
+            {
+              in: 'query',
+              name: 'branch',
+              required: false,
+              schema: { type: 'string', enum: ['Maganjo', 'Matugga'] },
+              description: 'Optional branch scope for admin/director callers'
+            }
+          ],
           requestBody: {
             required: true,
             content: {
@@ -2372,8 +2392,23 @@ const options = {
             404: { $ref: '#/components/responses/NotFound' }
           }
         }
-      }
-    }
+      },
+      '/api/v1/users/{id}': {
+        delete: {
+          tags: ['Users'],
+          summary: 'Delete user',
+          description: 'Admin and director callers can target another branch by passing the same branch query parameter used for user listing.',
+          security: secured,
+          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          responses: {
+            200: { description: 'User deleted' },
+            400: { $ref: '#/components/responses/BadRequest' },
+            401: { $ref: '#/components/responses/Unauthorized' },
+            403: { $ref: '#/components/responses/Forbidden' },
+            404: { $ref: '#/components/responses/NotFound' }
+          }
+        }
+      }    }
   },
   apis: []
 };
@@ -2383,3 +2418,4 @@ const swaggerSpec = swaggerJsdoc(options);
 module.exports = {
   swaggerSpec
 };
+

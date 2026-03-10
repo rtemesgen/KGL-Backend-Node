@@ -43,10 +43,10 @@ Optional but recommended variables:
 - `NODE_ENV` - usually `development` or `production`
 - `JWT_EXPIRES_IN` - token expiry (default: `1d`)
 - `REQUIRE_TRANSACTIONS` - `true`/`false` (defaults to `true` in production)
-- `BOOTSTRAP_ADMIN_NAME`
-- `BOOTSTRAP_ADMIN_EMAIL`
-- `BOOTSTRAP_ADMIN_PASSWORD`
-- `BOOTSTRAP_ADMIN_BRANCH`
+- `BOOTSTRAP_ADMIN_NAME` - startup seed value applied to the bootstrap admin account
+- `BOOTSTRAP_ADMIN_EMAIL` - bootstrap admin email to create or look up at startup
+- `BOOTSTRAP_ADMIN_PASSWORD` - bootstrap admin password that is re-hashed and applied at startup
+- `BOOTSTRAP_ADMIN_BRANCH` - bootstrap admin branch assignment at startup
 
 The server loads environment files in this order at startup:
 
@@ -117,7 +117,8 @@ The server loads environment files in this order at startup:
 - `GET /api/v1/report/export?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /api/v1/users`
 - `GET /api/v1/users/audit-events?module=&action=&actor=&from=YYYY-MM-DD&to=YYYY-MM-DD&page=1&limit=20`
-- `PATCH /api/v1/users/:id/role`
+- `PATCH /api/v1/users/:id/role?branch=<branch>` - Admin/director callers can manage users in the selected branch scope
+- `DELETE /api/v1/users/:id`
 
 ## Swagger Docs
 
@@ -172,3 +173,4 @@ curl http://localhost:5000/api/v1/health
 3. `01-Auth/Login`
 4. Copy `data.token` into `token` variable in Local environment
 5. Run module requests under Sales / Procurement / Accounting / Reports / Users
+

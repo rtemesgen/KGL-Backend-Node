@@ -11,5 +11,6 @@ router.use(requireAuth);
 router.get('/', requirePermission('users.view'), controller.listUsers);
 router.get('/audit-events', requirePermission('users.audit'), controller.listAuditEvents);
 router.patch('/:id/role', requirePermission('users.manage'), controller.updateUserRole);
+router.delete('/:id', requirePermission('users.manage'), controller.deleteUser);
 
 module.exports = router;
