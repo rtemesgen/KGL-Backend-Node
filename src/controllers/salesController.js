@@ -2,6 +2,7 @@ const Sale = require('../models/Sale');
 const salesService = require('../services/salesService');
 
 // Most sales operations are delegated to service layer for business rules.
+// Admin/director writes follow req.writeBranch when a branch override is selected.
 async function getDashboard(req, res, next) {
   try {
     const dashboard = await salesService.getDashboard(req.query, req.readBranch);
@@ -13,7 +14,7 @@ async function getDashboard(req, res, next) {
 
 async function createCashSale(req, res, next) {
   try {
-    const sale = await salesService.createCashSale(req.body, req.auth.sub, req.branch);
+    const sale = await salesService.createCashSale(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Cash sale created', data: { sale } });
   } catch (error) {
     next(error);
@@ -22,7 +23,7 @@ async function createCashSale(req, res, next) {
 
 async function createCreditSale(req, res, next) {
   try {
-    const sale = await salesService.createCreditSale(req.body, req.auth.sub, req.branch);
+    const sale = await salesService.createCreditSale(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Credit sale created', data: { sale } });
   } catch (error) {
     next(error);
@@ -40,7 +41,7 @@ async function listCustomers(req, res, next) {
 
 async function createCustomer(req, res, next) {
   try {
-    const customer = await salesService.createCustomer(req.body, req.auth.sub, req.branch);
+    const customer = await salesService.createCustomer(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Customer created', data: { customer } });
   } catch (error) {
     next(error);
@@ -49,7 +50,7 @@ async function createCustomer(req, res, next) {
 
 async function updateCustomer(req, res, next) {
   try {
-    const customer = await salesService.updateCustomer(req.params.id, req.body, req.auth.sub, req.branch);
+    const customer = await salesService.updateCustomer(req.params.id, req.body, req.auth.sub, req.writeBranch);
     res.status(200).json({ success: true, message: 'Customer updated', data: { customer } });
   } catch (error) {
     next(error);
@@ -58,7 +59,7 @@ async function updateCustomer(req, res, next) {
 
 async function deleteCustomer(req, res, next) {
   try {
-    await salesService.deleteCustomer(req.params.id, req.auth.sub, req.branch);
+    await salesService.deleteCustomer(req.params.id, req.auth.sub, req.writeBranch);
     res.status(200).json({ success: true, message: 'Customer deleted' });
   } catch (error) {
     next(error);
@@ -67,7 +68,7 @@ async function deleteCustomer(req, res, next) {
 
 async function addCustomerPayment(req, res, next) {
   try {
-    const result = await salesService.addCustomerPayment(req.params.id, req.body, req.auth.sub, req.branch);
+    const result = await salesService.addCustomerPayment(req.params.id, req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Customer payment recorded', data: result });
   } catch (error) {
     next(error);

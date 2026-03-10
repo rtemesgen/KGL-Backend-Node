@@ -1,6 +1,7 @@
 const procurementService = require('../services/procurementService');
 
 // Procurement controller methods orchestrate HTTP I/O around service calls.
+// Admin/director writes follow req.writeBranch when a branch override is selected.
 async function getOverview(req, res, next) {
   try {
     const overview = await procurementService.getOverview(req.query, req.readBranch);
@@ -21,7 +22,7 @@ async function listItems(req, res, next) {
 
 async function createItem(req, res, next) {
   try {
-    const item = await procurementService.createItem(req.body, req.auth.sub, req.branch);
+    const item = await procurementService.createItem(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Item created', data: { item } });
   } catch (error) {
     next(error);
@@ -30,7 +31,7 @@ async function createItem(req, res, next) {
 
 async function addInventoryAdjustment(req, res, next) {
   try {
-    const result = await procurementService.addInventoryAdjustment(req.body, req.auth.sub, req.branch);
+    const result = await procurementService.addInventoryAdjustment(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Inventory adjustment recorded', data: result });
   } catch (error) {
     next(error);
@@ -39,7 +40,7 @@ async function addInventoryAdjustment(req, res, next) {
 
 async function recordDamagedStock(req, res, next) {
   try {
-    const result = await procurementService.recordDamagedStock(req.body, req.auth.sub, req.branch);
+    const result = await procurementService.recordDamagedStock(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Damaged stock recorded', data: result });
   } catch (error) {
     next(error);
@@ -57,7 +58,7 @@ async function listSuppliers(req, res, next) {
 
 async function createSupplier(req, res, next) {
   try {
-    const supplier = await procurementService.createSupplier(req.body, req.auth.sub, req.branch);
+    const supplier = await procurementService.createSupplier(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Supplier created', data: { supplier } });
   } catch (error) {
     next(error);
@@ -66,7 +67,7 @@ async function createSupplier(req, res, next) {
 
 async function updateSupplier(req, res, next) {
   try {
-    const supplier = await procurementService.updateSupplier(req.params.id, req.body, req.auth.sub, req.branch);
+    const supplier = await procurementService.updateSupplier(req.params.id, req.body, req.auth.sub, req.writeBranch);
     res.status(200).json({ success: true, message: 'Supplier updated', data: { supplier } });
   } catch (error) {
     next(error);
@@ -75,7 +76,7 @@ async function updateSupplier(req, res, next) {
 
 async function deleteSupplier(req, res, next) {
   try {
-    await procurementService.deleteSupplier(req.params.id, req.auth.sub, req.branch);
+    await procurementService.deleteSupplier(req.params.id, req.auth.sub, req.writeBranch);
     res.status(200).json({ success: true, message: 'Supplier deleted' });
   } catch (error) {
     next(error);
@@ -85,7 +86,7 @@ async function deleteSupplier(req, res, next) {
 async function supplierPaymentAction(req, res, next) {
   try {
     // Supports credit payment workflows against a single supplier record.
-    const result = await procurementService.supplierPaymentAction(req.params.id, req.body, req.auth.sub, req.branch);
+    const result = await procurementService.supplierPaymentAction(req.params.id, req.body, req.auth.sub, req.writeBranch);
     res.status(200).json({
       success: true,
       message: `Supplier ${req.params.id} payment action saved`,
@@ -98,7 +99,7 @@ async function supplierPaymentAction(req, res, next) {
 
 async function createPurchase(req, res, next) {
   try {
-    const result = await procurementService.createPurchase(req.body, req.auth.sub, req.branch);
+    const result = await procurementService.createPurchase(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Purchase recorded', data: result });
   } catch (error) {
     next(error);

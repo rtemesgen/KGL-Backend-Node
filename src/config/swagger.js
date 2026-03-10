@@ -12,8 +12,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Local development server'
+        url: '/',
+        description: 'Current host'
       }
     ],
     tags: [
@@ -891,7 +891,7 @@ const options = {
           tags: ['Accounting'],
           summary: 'Accounting overview',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Accounting totals and counts',
@@ -946,6 +946,8 @@ const options = {
             { $ref: '#/components/parameters/toDate' },
             { $ref: '#/components/parameters/page' },
             { $ref: '#/components/parameters/limit' }
+,
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1016,7 +1018,7 @@ const options = {
           tags: ['Accounting'],
           summary: 'Delete expense',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: { description: 'Expense deleted' },
             401: { $ref: '#/components/responses/Unauthorized' },
@@ -1034,6 +1036,8 @@ const options = {
             { $ref: '#/components/parameters/toDate' },
             { $ref: '#/components/parameters/page' },
             { $ref: '#/components/parameters/limit' }
+,
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1088,6 +1092,8 @@ const options = {
             { $ref: '#/components/parameters/toDate' },
             { $ref: '#/components/parameters/page' },
             { $ref: '#/components/parameters/limit' }
+,
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1137,7 +1143,7 @@ const options = {
           tags: ['Accounting'],
           summary: 'Export accounting data',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Overview plus expense, credit collection, and income datasets',
@@ -1190,7 +1196,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Procurement overview',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Procurement overview totals',
@@ -1239,7 +1245,8 @@ const options = {
             { $ref: '#/components/parameters/search' },
             { in: 'query', name: 'lowStock', required: false, schema: { type: 'boolean' } },
             { $ref: '#/components/parameters/page' },
-            { $ref: '#/components/parameters/limit' }
+            { $ref: '#/components/parameters/limit' },
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1265,13 +1272,13 @@ const options = {
             401: { $ref: '#/components/responses/Unauthorized' }
           }
         },
-        post: { tags: ['Procurement'], summary: 'Create inventory item', security: secured }
+        post: { tags: ['Procurement'], summary: 'Create inventory item', description: 'Admin and director callers can target another branch by passing the branch query parameter.', security: secured, parameters: [{ in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }] }
       },
       '/api/v1/procurement/inventory-adjustments': {
-        post: { tags: ['Procurement'], summary: 'Record inventory adjustment', security: secured }
+        post: { tags: ['Procurement'], summary: 'Record inventory adjustment', description: 'Admin and director callers can target another branch by passing the branch query parameter.', security: secured, parameters: [{ in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }] }
       },
       '/api/v1/procurement/damaged-stock': {
-        post: { tags: ['Procurement'], summary: 'Record damaged stock', security: secured }
+        post: { tags: ['Procurement'], summary: 'Record damaged stock', description: 'Admin and director callers can target another branch by passing the branch query parameter.', security: secured, parameters: [{ in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }] }
       },
       '/api/v1/procurement/suppliers': {
         get: {
@@ -1281,7 +1288,8 @@ const options = {
           parameters: [
             { $ref: '#/components/parameters/search' },
             { $ref: '#/components/parameters/page' },
-            { $ref: '#/components/parameters/limit' }
+            { $ref: '#/components/parameters/limit' },
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1331,7 +1339,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Update supplier',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           requestBody: {
             required: true,
             content: {
@@ -1351,7 +1359,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Delete supplier',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: { description: 'Supplier deleted' },
             400: { $ref: '#/components/responses/BadRequest' },
@@ -1365,7 +1373,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Record supplier payment action',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           requestBody: {
             required: true,
             content: {
@@ -1393,7 +1401,8 @@ const options = {
             { in: 'query', name: 'supplierId', required: false, schema: { type: 'string' } },
             { in: 'query', name: 'paymentType', required: false, schema: { type: 'string', enum: ['cash', 'credit'] } },
             { $ref: '#/components/parameters/page' },
-            { $ref: '#/components/parameters/limit' }
+            { $ref: '#/components/parameters/limit' },
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1466,7 +1475,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Get purchase by id',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Purchase details',
@@ -1497,7 +1506,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Stock report',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/search' }],
+          parameters: [{ $ref: '#/components/parameters/search' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Current stock report',
@@ -1556,7 +1565,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Purchase report',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Purchase report summary and entries',
@@ -1595,7 +1604,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'List procurement receipts',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Supplier payment receipts',
@@ -1625,7 +1634,7 @@ const options = {
           tags: ['Procurement'],
           summary: 'Export procurement reports',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Overview and procurement datasets for export',
@@ -1694,7 +1703,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Sales dashboard',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Sales totals by type plus recent sales',
@@ -1783,7 +1792,7 @@ const options = {
           tags: ['Sales'],
           summary: 'List customers',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/search' }],
+          parameters: [{ $ref: '#/components/parameters/search' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Customer list',
@@ -1855,7 +1864,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Update customer',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           requestBody: {
             required: true,
             content: {
@@ -1875,7 +1884,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Delete customer',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: { description: 'Customer deleted' },
             400: { $ref: '#/components/responses/BadRequest' },
@@ -1892,7 +1901,8 @@ const options = {
           parameters: [
             { $ref: '#/components/parameters/idPath' },
             { $ref: '#/components/parameters/fromDate' },
-            { $ref: '#/components/parameters/toDate' }
+            { $ref: '#/components/parameters/toDate' },
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -1930,7 +1940,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Create customer payment',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           requestBody: {
             required: true,
             content: {
@@ -1955,7 +1965,8 @@ const options = {
           parameters: [
             { in: 'query', name: 'type', required: false, schema: { type: 'string', enum: ['cash', 'credit'] } },
             { $ref: '#/components/parameters/fromDate' },
-            { $ref: '#/components/parameters/toDate' }
+            { $ref: '#/components/parameters/toDate' },
+            { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }
           ],
           responses: {
             200: {
@@ -2007,7 +2018,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Get sale by id',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Sale details',
@@ -2038,7 +2049,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Daily sales report',
           security: secured,
-          parameters: [{ in: 'query', name: 'date', required: false, schema: { type: 'string', format: 'date' } }],
+          parameters: [{ in: 'query', name: 'date', required: false, schema: { type: 'string', format: 'date' } }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Daily sales summary and records',
@@ -2099,7 +2110,7 @@ const options = {
           tags: ['Sales'],
           summary: 'Export sales data',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Dashboard and sales datasets for export',
@@ -2131,7 +2142,7 @@ const options = {
           tags: ['Report'],
           summary: 'Combined report overview',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Consolidated cross-module overview',
@@ -2186,7 +2197,7 @@ const options = {
           tags: ['Report'],
           summary: 'Export report data',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }],
+          parameters: [{ $ref: '#/components/parameters/fromDate' }, { $ref: '#/components/parameters/toDate' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: {
               description: 'Consolidated overview and report datasets',
@@ -2399,7 +2410,7 @@ const options = {
           summary: 'Delete user',
           description: 'Admin and director callers can target another branch by passing the same branch query parameter used for user listing.',
           security: secured,
-          parameters: [{ $ref: '#/components/parameters/idPath' }],
+          parameters: [{ $ref: '#/components/parameters/idPath' }, { in: 'query', name: 'branch', required: false, schema: { type: 'string', enum: ['Maganjo', 'Matugga'] }, description: 'Optional branch scope for admin/director callers' }],
           responses: {
             200: { description: 'User deleted' },
             400: { $ref: '#/components/responses/BadRequest' },

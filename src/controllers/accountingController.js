@@ -21,8 +21,8 @@ async function listExpenses(req, res, next) {
 
 async function createExpense(req, res, next) {
   try {
-    // Use authenticated user id for audit ownership on created records.
-    const expense = await accountingService.createExpense(req.body, req.auth.sub, req.branch);
+    // Use the selected branch scope for admin/director writes.
+    const expense = await accountingService.createExpense(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Expense record created', data: { expense } });
   } catch (error) {
     next(error);
@@ -31,8 +31,8 @@ async function createExpense(req, res, next) {
 
 async function deleteExpense(req, res, next) {
   try {
-    await accountingService.deleteExpense(req.params.id, req.branch);
-    res.status(200).json({ success: true, message: `Expense ${req.params.id} deleted` });
+    await accountingService.deleteExpense(req.params.id, req.writeBranch);
+    res.status(200).json({ success: true, message: ('Expense ' + req.params.id + ' deleted') });
   } catch (error) {
     next(error);
   }
@@ -49,7 +49,7 @@ async function listCreditCollections(req, res, next) {
 
 async function createCreditCollection(req, res, next) {
   try {
-    const creditCollection = await accountingService.createCreditCollection(req.body, req.auth.sub, req.branch);
+    const creditCollection = await accountingService.createCreditCollection(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({
       success: true,
       message: 'Credit collection record created',
@@ -71,7 +71,7 @@ async function listOtherIncome(req, res, next) {
 
 async function createOtherIncome(req, res, next) {
   try {
-    const otherIncome = await accountingService.createOtherIncome(req.body, req.auth.sub, req.branch);
+    const otherIncome = await accountingService.createOtherIncome(req.body, req.auth.sub, req.writeBranch);
     res.status(201).json({ success: true, message: 'Other income record created', data: { otherIncome } });
   } catch (error) {
     next(error);

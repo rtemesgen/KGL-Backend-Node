@@ -21,13 +21,18 @@ function requireAuth(req, res, next) {
       return next(new ApiError(401, 'Token is missing a valid branch. Please login again'));
     }
 
-    if (payload.role === 'admin' && req.query.branch && !isValidBranch(req.query.branch)) {
-      return next(new ApiError(400, 'Invalid branch filter in query'));
+    const canOverrideBranch = ['admin', 'director'].includes(payload.role);
+    const requestedBranch = req.query.branch || req.body?.branch || null;
+
+    if (requestedBranch && !isValidBranch(requestedBranch)) {
+      return next(new ApiError(400, 'Invalid branch filter in request'));
     }
 
     req.auth = payload;
     req.branch = payload.branch;
-    req.readBranch = payload.role === 'admin' ? req.query.branch || null : payload.branch;
+    // Admin/director callers can target another branch for read/write workflows.
+    req.readBranch = canOverrideBranch ? requestedBranch || null : payload.branch;
+    req.writeBranch = canOverrideBranch ? requestedBranch || payload.branch : payload.branch;
     return next();
   } catch (error) {
     return next(new ApiError(401, 'Invalid or expired token'));

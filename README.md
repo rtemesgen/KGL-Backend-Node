@@ -74,41 +74,41 @@ The server loads environment files in this order at startup:
 
 ### Domain Modules
 
-- `GET /api/v1/accounting/overview`
+- `GET /api/v1/accounting/overview?branch=<branch>` - Admin/director callers can read another branch by query override
 - `GET /api/v1/accounting/expenses?from=YYYY-MM-DD&to=YYYY-MM-DD&page=1&limit=20`
-- `POST /api/v1/accounting/expenses`
-- `DELETE /api/v1/accounting/expenses/:id`
+- `POST /api/v1/accounting/expenses?branch=<branch>` - Admin/director callers can create in the selected branch scope
+- `DELETE /api/v1/accounting/expenses/:id?branch=<branch>` - Admin/director callers can delete in the selected branch scope
 - `GET /api/v1/accounting/credit-collections?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `POST /api/v1/accounting/credit-collections`
 - `GET /api/v1/accounting/other-income?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `POST /api/v1/accounting/other-income`
 - `GET /api/v1/accounting/export?from=YYYY-MM-DD&to=YYYY-MM-DD`
-- `GET /api/v1/procurement/overview`
+- `GET /api/v1/procurement/overview?branch=<branch>` - Admin/director callers can read another branch by query override
 - `GET /api/v1/procurement/items?search=&lowStock=true&page=1&limit=20`
-- `POST /api/v1/procurement/items`
-- `POST /api/v1/procurement/inventory-adjustments`
-- `POST /api/v1/procurement/damaged-stock`
+- `POST /api/v1/procurement/items?branch=<branch>` - Admin/director callers can create in the selected branch scope
+- `POST /api/v1/procurement/inventory-adjustments?branch=<branch>` - Admin/director callers can write in the selected branch scope
+- `POST /api/v1/procurement/damaged-stock?branch=<branch>` - Admin/director callers can write in the selected branch scope
 - `GET /api/v1/procurement/suppliers?search=&page=1&limit=20`
-- `POST /api/v1/procurement/suppliers`
-- `PATCH /api/v1/procurement/suppliers/:id`
-- `DELETE /api/v1/procurement/suppliers/:id`
-- `POST /api/v1/procurement/suppliers/:id/payment-actions`
-- `POST /api/v1/procurement/purchases` (cash or credit)
+- `POST /api/v1/procurement/suppliers?branch=<branch>` - Admin/director callers can create in the selected branch scope
+- `PATCH /api/v1/procurement/suppliers/:id?branch=<branch>` - Admin/director callers can update in the selected branch scope
+- `DELETE /api/v1/procurement/suppliers/:id?branch=<branch>` - Admin/director callers can delete in the selected branch scope
+- `POST /api/v1/procurement/suppliers/:id/payment-actions?branch=<branch>` - Admin/director callers can write in the selected branch scope
+- `POST /api/v1/procurement/purchases?branch=<branch>` (cash or credit; admin/director callers can write in the selected branch scope)
 - `GET /api/v1/procurement/purchases?paymentType=cash|credit&supplierId=&from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /api/v1/procurement/purchases/:id`
 - `GET /api/v1/procurement/stock-report`
 - `GET /api/v1/procurement/purchase-report?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /api/v1/procurement/receipts?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /api/v1/procurement/reports/export?from=YYYY-MM-DD&to=YYYY-MM-DD`
-- `GET /api/v1/sales/dashboard`
-- `POST /api/v1/sales/cash-sales`
-- `POST /api/v1/sales/credit-sales` (requires `customerId`; customer `tel` + `nin` are linked)
+- `GET /api/v1/sales/dashboard?branch=<branch>` - Admin/director callers can read another branch by query override
+- `POST /api/v1/sales/cash-sales?branch=<branch>` - Admin/director callers can create in the selected branch scope
+- `POST /api/v1/sales/credit-sales?branch=<branch>` (requires `customerId`; admin/director callers can create in the selected branch scope)
 - `GET /api/v1/sales/customers?search=`
-- `POST /api/v1/sales/customers`
-- `PATCH /api/v1/sales/customers/:id`
-- `DELETE /api/v1/sales/customers/:id`
+- `POST /api/v1/sales/customers?branch=<branch>` - Admin/director callers can create in the selected branch scope
+- `PATCH /api/v1/sales/customers/:id?branch=<branch>` - Admin/director callers can update in the selected branch scope
+- `DELETE /api/v1/sales/customers/:id?branch=<branch>` - Admin/director callers can delete in the selected branch scope
 - `GET /api/v1/sales/customers/:id/payments?from=YYYY-MM-DD&to=YYYY-MM-DD`
-- `POST /api/v1/sales/customers/:id/payments`
+- `POST /api/v1/sales/customers/:id/payments?branch=<branch>` - Admin/director callers can write in the selected branch scope
 - `GET /api/v1/sales?type=cash|credit&from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /api/v1/sales/:id`
 - `GET /api/v1/sales/daily-report?date=YYYY-MM-DD`
@@ -129,6 +129,7 @@ The server loads environment files in this order at startup:
 ## Notes
 
 - User authentication data is stored in MongoDB using Mongoose.
+- Admin and director tokens can override branch scope with ?branch=Maganjo|Matugga across accounting, sales, procurement, and user administration reads; write endpoints in those modules now use the same selected branch scope.
 - Supported roles: `director`, `admin`, `sales-agent`, `manager`.
 - Credit sales now update the selected customer's account (`totalCredit`, `totalPaid`, `accountBalance`).
 - Customer payments reduce outstanding credit balance and are stored as payment history records.
@@ -173,4 +174,5 @@ curl http://localhost:5000/api/v1/health
 3. `01-Auth/Login`
 4. Copy `data.token` into `token` variable in Local environment
 5. Run module requests under Sales / Procurement / Accounting / Reports / Users
+
 
